@@ -3,93 +3,473 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendamento — BeautyBook</title>
+    <title>Agendar — Agenda Glow Up</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* Hack CSS puro: checkbox escondido controla visibilidade */
+        #toggle-confirmacao { display: none; }
+        #toggle-confirmacao:checked ~ .secao-confirmacao { display: block; }
+        #toggle-confirmacao:checked ~ .secao-formulario  { display: none; }
+        .secao-confirmacao { display: none; }
+
+        .label-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #c9607a, #a0405a);
+            color: white;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(201,96,122,0.4);
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .label-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(201,96,122,0.5); }
+
+        .horarios-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .horario-opcao input[type="radio"] { display: none; }
+        .horario-label {
+            display: block;
+            padding: 10px 6px;
+            border: 2px solid #f0d8e0;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #7a5a6a;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+        .horario-opcao input[type="radio"]:checked + .horario-label {
+            background: linear-gradient(135deg, #c9607a, #a0405a);
+            color: white;
+            border-color: #c9607a;
+            box-shadow: 0 4px 12px rgba(201,96,122,0.3);
+        }
+        .horario-label:hover { border-color: #c9607a; color: #c9607a; }
+        .horario-indisponivel { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+
+        .info-local {
+            background: linear-gradient(135deg, #fdf6f8, #fff0f3);
+            border: 1px solid #f0d8e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .info-local-icone {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, #c9607a, #a0405a);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .info-local-texto h4 { font-size: 14px; font-weight: 700; color: #2d1b3d; margin-bottom: 4px; }
+        .info-local-texto p  { font-size: 13px; color: #7a5a6a; line-height: 1.5; }
+
+        .form-secao-titulo {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #c9607a;
+            margin: 20px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f0d8e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 600px) { .horarios-grid { grid-template-columns: repeat(3, 1fr); } }
+    </style>
 </head>
 <body>
 
+    <!-- ===== CABEÇALHO ===== -->
     <header>
-        <a href="index.html" class="logo">💅 Beauty<span>Book</span></a>
+        <a href="index.html" class="logo">
+            <span class="logo-icon"><i class="fa-solid fa-spa"></i></span>
+            Agenda <span>Glow Up</span>
+        </a>
         <nav>
             <ul>
                 <li><a href="index.html">Início</a></li>
                 <li><a href="servicos.html">Serviços</a></li>
-                <li><a href="agendamento.html">Agendar</a></li>
+                <li><a href="redes.html">Redes Sociais</a></li>
+                <li><a href="agendamento.html" class="nav-agendar ativo"><i class="fa-solid fa-calendar-check"></i> Agendar</a></li>
             </ul>
         </nav>
     </header>
 
+    <!-- ===== HERO ===== -->
     <div class="page-hero">
-        <h1>Fazer <span>Agendamento</span></h1>
-        <p>Preencha o formulário abaixo para simular um agendamento.</p>
+        <h1>Faça seu <span>Agendamento</span></h1>
+        <p>Escolha o serviço, a data e o horário. Simples, rápido e sem complicação.</p>
     </div>
 
-    <section>
+    <!-- Toggle CSS puro para mostrar confirmação -->
+    <input type="checkbox" id="toggle-confirmacao">
+
+    <!-- ===== SEÇÃO FORMULÁRIO ===== -->
+    <div class="secao-formulario">
+        <section>
+            <div class="container">
+
+                <div class="info-local">
+                    <div class="info-local-icone"><i class="fa-solid fa-location-dot"></i></div>
+                    <div class="info-local-texto">
+                        <h4>Agenda Glow Up — Rua da Beleza, 123 — Centro</h4>
+                        <p>Seg a Sáb: 9h às 18h &nbsp;|&nbsp; <i class="fa-brands fa-whatsapp" style="color:#25d366;"></i> (11) 99999-9999 &nbsp;|&nbsp; <i class="fa-brands fa-instagram" style="color:#c9607a;"></i> @agendaglowup</p>
+                    </div>
+                </div>
+
+                <div class="form-agendamento">
+                    <h2><i class="fa-solid fa-calendar-plus" style="color:#c9607a;"></i> Novo Agendamento</h2>
+                    <p class="subtitulo">Preencha os dados abaixo para confirmar seu horário. Você receberá um lembrete por e-mail.</p>
+
+                    <div class="form-secao-titulo"><i class="fa-solid fa-user"></i> Dados Pessoais</div>
+
+                    <div class="form-linha">
+                        <div class="form-grupo">
+                            <label>Nome Completo <span>*</span></label>
+                            <input type="text" placeholder="Seu nome completo">
+                        </div>
+                        <div class="form-grupo">
+                            <label>WhatsApp <span>*</span></label>
+                            <input type="tel" placeholder="(11) 99999-9999">
+                        </div>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>E-mail <span>*</span></label>
+                        <input type="email" placeholder="seu@email.com — para receber o lembrete">
+                    </div>
+
+                    <div class="form-secao-titulo"><i class="fa-solid fa-scissors"></i> Serviço Desejado</div>
+
+                    <div class="form-linha">
+                        <div class="form-grupo">
+                            <label>Categoria <span>*</span></label>
+                            <select>
+                                <option value="">Selecione a categoria</option>
+                                <option>💇 Cabelo</option>
+                                <option>💅 Unhas</option>
+                                <option>👁️ Sobrancelha</option>
+                                <option>✨ Estética Facial</option>
+                                <option>💄 Maquiagem</option>
+                                <option>🧖 Massagem</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Procedimento <span>*</span></label>
+                            <select>
+                                <option value="">Selecione o procedimento</option>
+                                <option>Corte Feminino — R$ 60</option>
+                                <option>Coloração Completa — R$ 120</option>
+                                <option>Hidratação Capilar — R$ 80</option>
+                                <option>Escova Progressiva — R$ 50</option>
+                                <option>Manicure — R$ 35</option>
+                                <option>Pedicure — R$ 40</option>
+                                <option>Gel nas Unhas — R$ 90</option>
+                                <option>Nail Art — R$ 60</option>
+                                <option>Design de Sobrancelha — R$ 25</option>
+                                <option>Henna de Sobrancelha — R$ 35</option>
+                                <option>Laminação — R$ 70</option>
+                                <option>Limpeza de Pele — R$ 90</option>
+                                <option>Maquiagem Social — R$ 100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>Profissional</label>
+                        <select>
+                            <option value="">Sem preferência (qualquer disponível)</option>
+                            <option>Ana Paula — Especialista em Cabelo</option>
+                            <option>Camila — Especialista em Unhas</option>
+                            <option>Fernanda — Especialista em Sobrancelha</option>
+                            <option>Juliana — Estética Facial e Maquiagem</option>
+                        </select>
+                    </div>
+
+                    <div class="form-secao-titulo"><i class="fa-solid fa-calendar"></i> Data e Horário</div>
+
+                    <div class="form-grupo">
+                        <label>Data do Agendamento <span>*</span></label>
+                        <input type="date">
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>Horário Disponível <span>*</span></label>
+                        <div class="horarios-grid">
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h1"><label class="horario-label" for="h1">09:00</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h2"><label class="horario-label" for="h2">09:30</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h3"><label class="horario-label" for="h3">10:00</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h4"><label class="horario-label horario-indisponivel" for="h4">10:30</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h5"><label class="horario-label" for="h5">11:00</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h6"><label class="horario-label horario-indisponivel" for="h6">11:30</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h7"><label class="horario-label" for="h7">13:00</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h8"><label class="horario-label" for="h8">13:30</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h9"><label class="horario-label" for="h9">14:00</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h10"><label class="horario-label" for="h10">14:30</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h11"><label class="horario-label horario-indisponivel" for="h11">15:00</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h12"><label class="horario-label" for="h12">15:30</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h13"><label class="horario-label" for="h13">16:00</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h14"><label class="horario-label" for="h14">16:30</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h15"><label class="horario-label" for="h15">17:00</label></div>
+                            <div class="horario-opcao"><input type="radio" name="horario" id="h16"><label class="horario-label" for="h16">17:30</label></div>
+                        </div>
+                        <p style="font-size:12px;color:#7a5a6a;margin-top:10px;"><i class="fa-solid fa-circle-info" style="color:#c9607a;"></i> Horários riscados já estão ocupados.</p>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>Observações (opcional)</label>
+                        <textarea placeholder="Alguma informação adicional? Ex: alergia a produtos, preferência de cor, etc."></textarea>
+                    </div>
+
+                    <!-- Botão via label (CSS puro) -->
+                    <label for="toggle-confirmacao" class="label-submit">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        Confirmar Agendamento
+                    </label>
+
+                    <p style="font-size:12px;color:#7a5a6a;text-align:center;margin-top:12px;">
+                        <i class="fa-solid fa-lock" style="color:#c9607a;"></i>
+                        Seus dados estão seguros. Não compartilhamos suas informações.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== SEÇÃO CONFIRMAÇÃO ===== -->
+    <div class="secao-confirmacao">
+        <section>
+            <div class="container">
+
+                <div class="confirmacao-box">
+                    <span class="check">✅</span>
+                    <h3>Agendamento Confirmado!</h3>
+                    <p>Seu agendamento foi registrado com sucesso. Você receberá um lembrete por e-mail com todos os detalhes do seu horário. Até lá!</p>
+                </div>
+
+                <!-- Lembrete -->
+                <div class="lembrete-box">
+                    <div class="lembrete-titulo">
+                        <i class="fa-solid fa-bell"></i>
+                        Lembrete do Agendamento
+                    </div>
+                    <div class="lembrete-item">
+                        <div class="lembrete-icone"><i class="fa-solid fa-scissors"></i></div>
+                        <div>
+                            <div class="lembrete-label">Procedimento</div>
+                            <div class="lembrete-valor">Corte Feminino + Hidratação</div>
+                        </div>
+                    </div>
+                    <div class="lembrete-item">
+                        <div class="lembrete-icone"><i class="fa-solid fa-calendar"></i></div>
+                        <div>
+                            <div class="lembrete-label">Data</div>
+                            <div class="lembrete-valor">Segunda-feira, 07 de Abril de 2026</div>
+                        </div>
+                    </div>
+                    <div class="lembrete-item">
+                        <div class="lembrete-icone"><i class="fa-solid fa-clock"></i></div>
+                        <div>
+                            <div class="lembrete-label">Horário</div>
+                            <div class="lembrete-valor">14:00 — Duração estimada: 1h30</div>
+                        </div>
+                    </div>
+                    <div class="lembrete-item">
+                        <div class="lembrete-icone"><i class="fa-solid fa-location-dot"></i></div>
+                        <div>
+                            <div class="lembrete-label">Local</div>
+                            <div class="lembrete-valor">Agenda Glow Up — Rua da Beleza, 123 — Centro</div>
+                        </div>
+                    </div>
+                    <div class="lembrete-item">
+                        <div class="lembrete-icone"><i class="fa-solid fa-user"></i></div>
+                        <div>
+                            <div class="lembrete-label">Profissional</div>
+                            <div class="lembrete-valor">Ana Paula — Especialista em Cabelo</div>
+                        </div>
+                    </div>
+                    <div class="lembrete-item">
+                        <div class="lembrete-icone"><i class="fa-solid fa-money-bill-wave"></i></div>
+                        <div>
+                            <div class="lembrete-label">Valor Estimado</div>
+                            <div class="lembrete-valor">R$ 140,00 (Corte R$60 + Hidratação R$80)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- E-mail simulado -->
+                <div class="email-simulado">
+                    <div class="email-header">
+                        <div class="email-icone"><i class="fa-solid fa-envelope"></i></div>
+                        <div>
+                            <div class="email-de">De: contato@agendaglowup.com.br</div>
+                            <div class="email-assunto">✨ Confirmação de Agendamento — Agenda Glow Up</div>
+                        </div>
+                    </div>
+                    <div class="email-corpo">
+                        <p>Olá, <strong>Maria!</strong> 💕</p><br>
+                        <p>Seu agendamento foi confirmado com sucesso. Aqui estão os detalhes:</p><br>
+                        <p>📋 <strong>Procedimento:</strong> Corte Feminino + Hidratação</p>
+                        <p>📅 <strong>Data:</strong> Segunda-feira, 07 de Abril de 2026</p>
+                        <p>🕑 <strong>Horário:</strong> 14:00</p>
+                        <p>📍 <strong>Local:</strong> Rua da Beleza, 123 — Centro</p>
+                        <p>👩 <strong>Profissional:</strong> Ana Paula</p>
+                        <p>💰 <strong>Valor:</strong> R$ 140,00</p><br>
+                        <p>⚠️ <strong>Lembre-se:</strong> Em caso de cancelamento, avise com pelo menos 2 horas de antecedência pelo WhatsApp: <strong>(11) 99999-9999</strong></p><br>
+                        <p>Nos vemos em breve! Com carinho, <strong>Equipe Agenda Glow Up</strong> ✨</p>
+                    </div>
+                </div>
+
+                <div class="centralizado margem-topo">
+                    <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20confirmar%20meu%20agendamento." target="_blank" class="btn btn-primario">
+                        <i class="fa-brands fa-whatsapp"></i> Confirmar pelo WhatsApp
+                    </a>
+                    <a href="index.html" class="btn btn-secundario">
+                        <i class="fa-solid fa-house"></i> Voltar ao Início
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== POLÍTICAS ===== -->
+    <section class="secao-secundaria">
         <div class="container">
-            <div class="form-agendamento">
-                <h2 style="font-size: 20px; color: #3d2b1f; margin-bottom: 25px; text-align: center;">Dados do Agendamento</h2>
-
-                <div class="form-grupo">
-                    <label>Nome completo</label>
-                    <input type="text" placeholder="Digite seu nome">
+            <div class="titulo-secao">
+                <h2>Políticas de <span>Agendamento</span></h2>
+                <div class="linha-divisoria"></div>
+            </div>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-icone"><i class="fa-solid fa-clock"></i></div>
+                    <h3>Pontualidade</h3>
+                    <p>Chegue com 5 minutos de antecedência. Atrasos superiores a 15 minutos podem resultar no cancelamento do horário.</p>
                 </div>
-
-                <div class="form-grupo">
-                    <label>Telefone / WhatsApp</label>
-                    <input type="tel" placeholder="(11) 99999-9999">
+                <div class="card">
+                    <div class="card-icone"><i class="fa-solid fa-calendar-xmark"></i></div>
+                    <h3>Cancelamento</h3>
+                    <p>Cancele com pelo menos 2 horas de antecedência sem custo. Cancelamentos tardios têm taxa de R$ 20.</p>
                 </div>
-
-                <div class="form-grupo">
-                    <label>Serviço desejado</label>
-                    <select>
-                        <option value="">Selecione um serviço</option>
-                        <option>Corte Feminino — R$ 60</option>
-                        <option>Coloração — R$ 120</option>
-                        <option>Manicure — R$ 35</option>
-                        <option>Pedicure — R$ 40</option>
-                        <option>Design de Sobrancelha — R$ 25</option>
-                        <option>Henna — R$ 35</option>
-                    </select>
-                </div>
-
-                <div class="form-grupo">
-                    <label>Data preferida</label>
-                    <input type="date">
-                </div>
-
-                <div class="form-grupo">
-                    <label>Horário preferido</label>
-                    <select>
-                        <option value="">Selecione um horário</option>
-                        <option>09:00</option>
-                        <option>10:00</option>
-                        <option>11:00</option>
-                        <option>14:00</option>
-                        <option>15:00</option>
-                        <option>16:00</option>
-                    </select>
-                </div>
-
-                <div class="form-grupo">
-                    <label>Observações</label>
-                    <textarea placeholder="Alguma informação adicional?"></textarea>
-                </div>
-
-                <div class="centralizado">
-                    <a href="index.html" class="btn btn-primario">Confirmar Agendamento</a>
+                <div class="card">
+                    <div class="card-icone"><i class="fa-solid fa-credit-card"></i></div>
+                    <h3>Pagamento</h3>
+                    <p>Aceitamos Pix, dinheiro e cartões de débito e crédito (até 3x sem juros). Pagamento após o atendimento.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer>
-        <div class="footer-logo">Beauty<span>Book</span></div>
-        <div class="footer-links">
-            <a href="index.html">Início</a>
-            <a href="servicos.html">Serviços</a>
-            <a href="agendamento.html">Agendar</a>
+    <!-- ===== FAQ ===== -->
+    <section>
+        <div class="container">
+            <div class="titulo-secao">
+                <h2>Dúvidas sobre o <span>Agendamento</span></h2>
+                <div class="linha-divisoria"></div>
+            </div>
+            <div class="grid-2">
+                <div class="card faq-card">
+                    <h3><i class="fa-solid fa-circle-question"></i> Posso agendar para outra pessoa?</h3>
+                    <p>Sim! Basta preencher o formulário com o nome da pessoa que será atendida e um contato para envio do lembrete.</p>
+                </div>
+                <div class="card faq-card">
+                    <h3><i class="fa-solid fa-circle-question"></i> Quanto tempo dura cada serviço?</h3>
+                    <p>Corte: 1h | Coloração: 2-3h | Manicure: 45min | Pedicure: 1h | Sobrancelha: 30min | Limpeza de pele: 1h.</p>
+                </div>
+                <div class="card faq-card">
+                    <h3><i class="fa-solid fa-circle-question"></i> Posso agendar mais de um serviço?</h3>
+                    <p>Sim! Você pode combinar serviços no mesmo dia. Mencione na observação do formulário quais deseja fazer.</p>
+                </div>
+                <div class="card faq-card">
+                    <h3><i class="fa-solid fa-circle-question"></i> Como recebo o lembrete?</h3>
+                    <p>Após confirmar o agendamento, você recebe um e-mail com todos os detalhes: data, horário, local, procedimento e profissional.</p>
+                </div>
+            </div>
         </div>
-        <p class="footer-copy">© 2026 BeautyBook — Projeto ADS 1º Semestre.</p>
+    </section>
+
+    <!-- ===== RODAPÉ ===== -->
+    <footer>
+        <div class="footer-conteudo">
+            <div class="footer-sobre">
+                <a href="index.html" class="footer-logo">
+                    <span class="logo-icon"><i class="fa-solid fa-spa"></i></span>
+                    Agenda <span>Glow Up</span>
+                </a>
+                <p>Salão de estética especializado em beleza feminina. Profissionais qualificadas, produtos de qualidade e atendimento personalizado.</p>
+                <div class="footer-redes">
+                    <a href="https://www.instagram.com" target="_blank" class="footer-rede"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com" target="_blank" class="footer-rede"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://wa.me/5511999999999" target="_blank" class="footer-rede"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://www.facebook.com" target="_blank" class="footer-rede"><i class="fa-brands fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="servicos.html">Serviços</a></li>
+                    <li><a href="agendamento.html">Agendar</a></li>
+                    <li><a href="redes.html">Redes Sociais</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Serviços</h4>
+                <ul>
+                    <li><a href="servicos.html">Cabelo</a></li>
+                    <li><a href="servicos.html">Unhas</a></li>
+                    <li><a href="servicos.html">Sobrancelha</a></li>
+                    <li><a href="servicos.html">Estética Facial</a></li>
+                    <li><a href="servicos.html">Maquiagem</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contato</h4>
+                <ul>
+                    <li><a href="https://wa.me/5511999999999" target="_blank"><i class="fa-brands fa-whatsapp"></i> (11) 99999-9999</a></li>
+                    <li><a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i> @agendaglowup</a></li>
+                    <li><a href="#">Seg–Sáb: 9h–18h</a></li>
+                    <li><a href="#">Rua da Beleza, 123</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="footer-divisor">
+        <div class="footer-bottom">
+            <p class="footer-copy">© 2026 Agenda Glow Up — Projeto ADS 1º Semestre. Desenvolvido com HTML e CSS.</p>
+            <p class="footer-copy">Referência técnica: <a href="https://developer.mozilla.org" target="_blank">MDN Web Docs</a></p>
+        </div>
     </footer>
 
 </body>
